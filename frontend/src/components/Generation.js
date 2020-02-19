@@ -5,6 +5,7 @@ const MINIMUM_DELAY = 3000;
 
 class Generation extends Component {
   state = { generation: DEFAULT_GENERATION };
+  timer = null;
 
   fetchGeneration = () => {
     fetch('http://localhost:3000/generation')
@@ -22,11 +23,15 @@ class Generation extends Component {
       new Date().getTime();
     if (delay < MINIMUM_DELAY) delay = delay;
 
-    setTimeout(() => this.fetchNextGeneration(), delay);
+    this.timer = setTimeout(() => this.fetchNextGeneration(), delay);
   };
 
   componentDidMount() {
     this.fetchNextGeneration();
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.timer);
   }
 
   render() {
